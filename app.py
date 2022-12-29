@@ -74,8 +74,6 @@ def goals():
         if exercise1 is not None:
             session['exercise'] = exercise1
         #db.execute("INSERT INTO graph (exercise) VALUES(?)", exercise)
-    return render_template("goals.html")
-'''
 
     # Remember the last exercise that was requested to check progress for
     exercise = session['exercise']
@@ -105,9 +103,13 @@ def goals():
 
     # Get a list of all exercises to be able to be selected in the graph
     options = db.execute("SELECT DISTINCT exercise FROM workouts ORDER BY exercise")
+    '''
+    link = url_for("goals") + "#myChart"
+    return redirect(link)
+    '''
 
     return render_template("goals.html", bodyweight=bodyweight, exercise=exercise, options=options, dates=dates, weights=weights)
-'''
+
 
 # Load best lifts page
 @app.route("/bestlifts")

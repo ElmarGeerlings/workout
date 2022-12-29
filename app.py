@@ -76,7 +76,7 @@ def goals():
         #db.execute("INSERT INTO graph (exercise) VALUES(?)", exercise)
 
     # Remember the last exercise that was requested to check progress for
-    exercise = session['exercise']
+    exercise = "Bench5"
     #exercise = db.execute("SELECT exercise FROM graph ORDER BY id DESC")[0]["exercise"]
 
     # Load last inputted bodyweight
@@ -103,10 +103,6 @@ def goals():
 
     # Get a list of all exercises to be able to be selected in the graph
     options = db.execute("SELECT DISTINCT exercise FROM workouts ORDER BY exercise")
-    '''
-    link = url_for("goals") + "#myChart"
-    return redirect(link)
-    '''
 
     return render_template("goals.html", bodyweight=bodyweight, exercise=exercise, options=options, dates=dates, weights=weights)
 

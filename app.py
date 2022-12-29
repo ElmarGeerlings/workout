@@ -74,7 +74,9 @@ def goals():
         if exercise1 is not None:
             session['exercise'] = exercise1
         #db.execute("INSERT INTO graph (exercise) VALUES(?)", exercise)
-
+    else:
+        session['exercise'] = "Bodyweight"
+    
     # Remember the last exercise that was requested to check progress for
     exercise = session['exercise']
     #exercise = db.execute("SELECT exercise FROM graph ORDER BY id DESC")[0]["exercise"]

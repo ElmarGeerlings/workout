@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Best Lifts
+{% endblock %}
+
+{% block main %}
+<h3>Squat: 195KG</h3>
+<video width="200" height="350" controls>
+    <source src="static/videos/squat195.mp4" type="video/mp4">
+</video>
+
+<h3 style="margin-top:1.2cm;">Bench: 120KG</h3>
+<video width="200" height="350" controls>
+    <source src="static/videos/bench120.mp4" type="video/mp4">
+</video>
+
+<h3 style="margin-top:1.2cm;">Deadlift: 242KG (3x BW)</h3>
+<video width="350" height="200" controls>
+    <source src="static/videos/deadlift242.mp4" type="video/mp4">
+</video>
+
+<h3 style="margin-top:1.2cm;">Deadlift: 260KG</h3>
+<video width="350" height="200" controls>
+    <source src="static/videos/deadlift260.mp4" type="video/mp4">
+</video>
+
+{% endblock %}

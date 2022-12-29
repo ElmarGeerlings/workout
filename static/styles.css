@@ -1,0 +1,134 @@
+input[type="number"]{
+    display: inline-block;
+    width: 70px;
+}
+
+label{
+    text-align:left;
+    margin-top:0.2cm;
+}
+
+p {
+    color:black;
+}
+
+.shift1{
+    position: relative;
+    left: 35px;
+}
+
+.shift1 h1:first-of-type{
+    position: relative;
+    right: 10px;
+}
+
+.shift1 h1{
+    position: relative;
+    right: 32px;
+}
+
+.shift1 select{
+    position: relative;
+    right: 37px;
+    margin-top:0.5cm;
+}
+
+.NoWeight{
+    position: relative;
+    right: 38px;
+}
+
+.inputBench{
+    position: relative;
+    left: 42px;
+}
+
+.inputOHP{
+    position: relative;
+    left: 68px;
+}
+
+.inputDCurls{
+    position: relative;
+    left: 20px;
+}
+
+.inputEZCurls{
+    position: relative;
+    left: 30px;
+}
+
+.inputFarmers{
+    position: relative;
+    left: 50px;
+}
+
+.inputFacePulls{
+    position: relative;
+    left: 46px;
+}
+
+.inputSideBends{
+    position: relative;
+    left: 33.5px;
+}
+
+.inputLatRaises{
+    position: relative;
+    left: 32px;
+}
+
+.inputDeadlifts{
+    position: relative;
+    left: 57px;
+}
+
+.inputSquats{
+    position: relative;
+    left: 60px;
+}
+
+.inputFrontSquats{
+    position: relative;
+    left: 37px;
+}
+
+.inputInclineBench{
+    position: relative;
+    left: 35.5px;
+}
+
+table {
+    margin: auto;
+    border: 1px solid;
+    text-align: left;
+    background-color: Ivory;
+    border-collapse: collapse;
+    border-color: black;
+    width: 300px;
+    font-size: 24px;
+}
+
+td {
+    border: 1px solid;
+}
+
+.quote {
+    color: DimGrey;
+    margin-bottom: 1.0cm;
+}
+
+.cues{
+    position: relative;
+    left: 25%;
+    text-align: left;
+}
+
+.cues li{
+    position: relative;
+    right: 14px;
+}
+
+.cues h3{
+    margin-top: 0.7cm;
+}

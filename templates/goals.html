@@ -1,0 +1,88 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Goals & Progress
+{% endblock %}
+
+{% block main %}
+
+<h3 class="quote"><i>~Strength is never a weakness, weakness is never a strength~</i></h3>
+
+<h3>Goals (by 17-05-2023)</h3>
+<table border=1 frame=void rules=rows>
+        <tr>
+            <td>Bench</td>
+            <td>150 kg</td>
+        </tr>
+
+        <tr>
+            <td>Squat</td>
+            <td>220 kg</td>
+        </tr>
+
+        <tr>
+            <td>Deadlift</td>
+            <td>280 kg</td>
+        </tr>
+
+        <tr>
+            <td><b>Total</b></td>
+            <td><b>650 kg (7xBW)</b></td>
+        </tr>
+</table>
+
+<h3 style="margin-top: 1.5cm;">Bodyweight</h3>
+
+<form style="margin-top: 0.3cm;" action="/goals" method="post">
+  <div>
+    <input style="width: 55px;" autocomplete="off" min="0" step="0.1" name="bodyweight" value="{{ bodyweight }}" type="number">
+  </div>
+  <button style="margin-top: 0.1cm;" class="btn btn-primary" type="submit" name="button">Submit Weight</button>
+</form>
+
+<h3 style="margin-top: 1.5cm;">Progress</h3>
+
+<form style="margin-top: 0.3cm;" action="/goals" method="post">
+  <div>
+      <select class="form-select mx-auto w-auto" name="exercise">
+          <option disabled selected>Exercise</option>
+          <option>Bodyweight</option>
+          {% for option in options %}
+          <option>{{ option.exercise }}</option>
+          {% endfor %}
+      </select>
+  </div>
+  <button style="margin-top: 0.1cm;" class="btn btn-primary" type="submit" name="button">Check Progress</button>
+</form>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+
+<canvas id="myChart" style="margin:auto;margin-top: 0.2cm;width:100%;max-width:600px"></canvas>
+
+<script>
+var xValues = {{ dates|tojson }};
+var yValues = {{ weights }};
+
+new Chart("myChart", {
+  type: "line",
+  data: {
+    labels: xValues,
+    datasets: [{
+      fill: false,
+      lineTension: 0,
+      backgroundColor: "rgba(0,0,255,1.0)",
+      borderColor: "rgba(0,0,255,0.1)",
+      data: yValues
+    }]
+  },
+  options: {
+    legend: {display: false},
+    title: {
+      display: true,
+      text: "{{ exercise }}"
+    }
+  }
+});
+</script>
+
+{% endblock %}

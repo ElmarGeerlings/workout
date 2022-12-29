@@ -76,7 +76,7 @@ def goals():
         #db.execute("INSERT INTO graph (exercise) VALUES(?)", exercise)
 
     # Remember the last exercise that was requested to check progress for
-    exercise = "Bench5"
+    exercise = session['exercise']
     #exercise = db.execute("SELECT exercise FROM graph ORDER BY id DESC")[0]["exercise"]
 
     # Load last inputted bodyweight

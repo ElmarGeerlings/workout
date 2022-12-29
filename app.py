@@ -74,9 +74,10 @@ def goals():
         if exercise1 is not None:
             session['exercise'] = exercise1
         #db.execute("INSERT INTO graph (exercise) VALUES(?)", exercise)
-    else:
+
+    if session['exercise'] is None:
         session['exercise'] = "Bodyweight"
-    
+
     # Remember the last exercise that was requested to check progress for
     exercise = session['exercise']
     #exercise = db.execute("SELECT exercise FROM graph ORDER BY id DESC")[0]["exercise"]
@@ -124,6 +125,7 @@ def squat():
 # Load benchpress lifting cues page
 @app.route("/bench")
 def bench():
+    session['exercise'] = "Bench5"
     return render_template("bench.html")
 
 

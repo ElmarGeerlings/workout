@@ -75,7 +75,8 @@ def goals():
             session['exercise'] = exercise1
         #db.execute("INSERT INTO graph (exercise) VALUES(?)", exercise)
 
-    if len(session['exercise']) < 2:
+    # If session is empty, display bodyweight progress
+    if not session.get('exercise'):
         session['exercise'] = "Bodyweight"
 
     # Remember the last exercise that was requested to check progress for
@@ -125,7 +126,6 @@ def squat():
 # Load benchpress lifting cues page
 @app.route("/bench")
 def bench():
-    session['exercise'] = "Bench5"
     return render_template("bench.html")
 
 

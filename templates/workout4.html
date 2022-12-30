@@ -8,8 +8,13 @@
 <head>
     <script>
     function validateForm() {
-        var x = document.forms["form"]["feedback"].value;
+        var x = document.forms["form"]["feedback1"].value;
         if (x != "+" && x != "=" && x != "-") {
+        alert("Submit Feedback");
+        return false;
+        }
+        var y = document.forms["form"]["feedback2"].value;
+        if (y != "+" && y != "=" && y != "-") {
         alert("Submit Feedback");
         return false;
         }

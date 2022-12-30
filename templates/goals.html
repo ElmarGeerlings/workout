@@ -55,9 +55,13 @@
   <button style="margin-top: 0.1cm;" class="btn btn-primary" type="submit" name="button">Check Progress</button>
 </form>
 
+<div class="graphtop">
+  {{ exercise }}
+</div>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
 
-<canvas id="myChart" style="margin:auto;margin-top: 0.2cm;width:100%;max-width:600px"></canvas>
+<canvas id="myChart" class="chart"></canvas>
 
 <script>
 var xValues = {{ dates|tojson }};
@@ -75,13 +79,23 @@ new Chart("myChart", {
       data: yValues
     }]
   },
-  options: {
+  options : {
     legend: {display: false},
-    title: {
-      display: true,
-      text: "{{ exercise }}"
+      scales: {
+        yAxes: [{
+          scaleLabel: {
+            display: true,
+            labelString: 'Weight (KG)'
+          }
+        }],
+        xAxes: [{
+          scaleLabel: {
+            display: true,
+            labelString: 'Date'
+          }
+        }],
+      }
     }
-  }
 });
 </script>
 

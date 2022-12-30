@@ -8,6 +8,19 @@ label{
     margin-top:0.2cm;
 }
 
+.graphtop{
+    margin-top: 0.8cm;
+    font-size: 14px;
+    font-weight: bold;
+    color: DimGray;
+}
+
+.chart{
+    margin:auto;
+    width:100%;
+    max-width:600px
+}
+
 p {
     color:black;
 }

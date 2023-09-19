@@ -3,12 +3,12 @@
 
 import os
 
-from cs50 import SQL
-from flask import Flask, flash, redirect, render_template, request, session, url_for
-from flask_session import Session
-from tempfile import mkdtemp
-from datetime import datetime
+import psycopg2
 
+from cs50 import SQL
+from flask import Flask, render_template, request, session
+from flask_session import Session
+from datetime import datetime
 
 # Configure application
 app = Flask(__name__)
@@ -21,23 +21,29 @@ Session(app)
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 
 '''
-@app.after_request
-def after_request(response):
-    """Ensure responses aren't cached"""
-    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
-    response.headers["Expires"] = 0
-    response.headers["Pragma"] = "no-cache"
-    return response
-'''
-
 # Configure CS50 Library to use SQLite database
+url = "postgres://exercises_7g9i_user:AkBujg6hJTVUnxPHU9QdoNld6c8YiOPB@dpg-ck0o9mu3ktkc738padr0-a.frankfurt-postgres.render.com/exercises_7g9i"
+
 uri = os.getenv("DATABASE_URL")
+#uri = os.getenv(url)
 if uri.startswith("postgres://"):
     uri = uri.replace("postgres://", "postgresql://")
+
 db = SQL(uri)
+'''
+
+conn = psycopg2.connect(
+        host="dpg-ck0o9mu3ktkc738padr0-a",
+        database="exercises_7g9i",
+        user=os.environ['exercises_7g9i_user'],
+        password=os.environ['AkBujg6hJTVUnxPHU9QdoNld6c8YiOPB'])
+
+# Open a cursor to perform database operations
+db = conn.cursor()
+
 
 '''
-SQL table:
+SQL tables:
 
 CREATE TABLE workouts
 (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
@@ -51,10 +57,6 @@ CREATE TABLE bodyweight
 (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
 weight NUMERIC NOT NULL,
 date TEXT NOT NULL);
-
-CREATE TABLE graph
-(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-exercise TEXT NOT NULL);
 '''
 
 
@@ -73,7 +75,6 @@ def goals():
         exercise1 = request.form.get("exercise")
         if exercise1 is not None:
             session['exercise'] = exercise1
-        #db.execute("INSERT INTO graph (exercise) VALUES(?)", exercise)
 
     # If session is empty, display bodyweight progress
     if not session.get('exercise'):
@@ -81,7 +82,6 @@ def goals():
 
     # Remember the last exercise that was requested to check progress for
     exercise = session['exercise']
-    #exercise = db.execute("SELECT exercise FROM graph ORDER BY id DESC")[0]["exercise"]
 
     # Load last inputted bodyweight
     if len(db.execute("SELECT weight FROM bodyweight ORDER BY id DESC LIMIT 1")) > 0:
@@ -350,93 +350,70 @@ def workout():
     # Show today's workout based on the current day of the week
     day = datetime.today().weekday()
 
+    try:
+        db.execute("SELECT * FROM workouts")
+    except:
+        db.execute("CREATE TABLE workouts(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,exercise TEXT NOT NULL,weight NUMERIC NOT NULL,feedback TEXT NOT NULL,day NUMERIC NOT NULL,date TEXT NOT NULL)")
+        db.execute("CREATE TABLE bodyweight(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,weight NUMERIC NOT NULL,date TEXT NOT NULL)")
+        db.execute("CREATE TABLE graph(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,exercise TEXT NOT NULL)")
+
+    # Get current date
+    date = datetime.today().strftime("%Y-%m-%d")
+
+    # Get feedback from last week
+    try:
+        feedback = db.execute("SELECT feedback FROM workouts WHERE day = ? AND NOT date = ? ORDER BY id DESC LIMIT 1", day, date)[0]["feedback"]
+    except:
+        feedback = "  "
+
+    # Load weights
+    n = [5, 5, 5, 0, 3, 6, 0][day]
+    if n > 0:
+        workout = db.execute("SELECT weight FROM workouts WHERE day = ? ORDER BY id DESC LIMIT ?", day, n)
+        if n > 0:
+            for i in range(n):
+                workout.append({"weight": 0})
+
+    print(workout)
+
     if day == 0:
-        if len(db.execute("SELECT weight FROM workouts WHERE day = ?", day)) > 0:
-            # Get current date
-            date = datetime.today().strftime("%Y-%m-%d")
-            n = 5
+        # Number of exercises
+        n = 5
 
-            # Load weights
-            workout = db.execute("SELECT weight FROM workouts WHERE day = ? ORDER BY id DESC LIMIT ?", day, n)
-
-            # Get feedback from last week
-            feedback = db.execute("SELECT feedback FROM workouts WHERE day = ? AND NOT date = ? ORDER BY id DESC LIMIT 1", day, date)[0]["feedback"]
-
-            # Display "workout" page
-            return render_template("workout1.html", feedback=feedback, weight1=workout[n-1]["weight"], weight2=workout[n-2]["weight"], weight3=workout[n-3]["weight"], weight4=workout[n-4]["weight"], weight5=workout[n-5]["weight"])
-        # Display empty "workout" page
-        else:
-            return render_template("workout1.html")
+        # Display "workout" page
+        return render_template("workout1.html", feedback=feedback, weight1=workout[n-1]["weight"], weight2=workout[n-2]["weight"], weight3=workout[n-3]["weight"], weight4=workout[n-4]["weight"], weight5=workout[n-5]["weight"])
     elif day == 1:
-        if len(db.execute("SELECT weight FROM workouts WHERE day = ?", day)) > 0:
-            # Get current date
-            date = datetime.today().strftime("%Y-%m-%d")
-            n = 5
+        # Number of exercises
+        n = 5
 
-            # Load weights
-            workout = db.execute("SELECT weight FROM workouts WHERE day = ? ORDER BY id DESC LIMIT ?", day, n)
-
-            # Get feedback from last week
-            feedback = db.execute("SELECT feedback FROM workouts WHERE day = ? AND NOT date = ? ORDER BY id DESC LIMIT 1", day, date)[0]["feedback"]
-
-            # Display "workout" page
-            return render_template("workout2.html", feedback=feedback, weight1=workout[n-1]["weight"], weight2=workout[n-2]["weight"], weight3=workout[n-3]["weight"], weight4=workout[n-4]["weight"], weight5=workout[n-5]["weight"])
-        # Display empty "workout" page
-        else:
-            return render_template("workout2.html")
+        # Display "workout" page
+        return render_template("workout2.html", feedback=feedback, weight1=workout[n-1]["weight"], weight2=workout[n-2]["weight"], weight3=workout[n-3]["weight"], weight4=workout[n-4]["weight"], weight5=workout[n-5]["weight"])
     elif day == 2:
-        if len(db.execute("SELECT weight FROM workouts WHERE day = ?", day)) > 0:
-            # Get current date
-            date = datetime.today().strftime("%Y-%m-%d")
-            n = 5
+        # Number of exercises
+        n = 5
 
-            # Load weights
-            workout = db.execute("SELECT weight FROM workouts WHERE day = ? ORDER BY id DESC LIMIT ?", day, n)
-
-            # Get feedback from last week
-            feedback = db.execute("SELECT feedback FROM workouts WHERE day = ? AND NOT date = ? ORDER BY id DESC LIMIT 1", day, date)[0]["feedback"]
-
-            # Display "workout" page
-            return render_template("workout3.html", feedback=feedback, weight1=workout[n-1]["weight"], weight2=workout[n-2]["weight"], weight3=workout[n-3]["weight"], weight4=workout[n-4]["weight"], weight5=workout[n-5]["weight"])
-        # Display empty "workout" page
-        else:
-            return render_template("workout3.html")
+        # Display "workout" page
+        return render_template("workout3.html", feedback=feedback, weight1=workout[n-1]["weight"], weight2=workout[n-2]["weight"], weight3=workout[n-3]["weight"], weight4=workout[n-4]["weight"], weight5=workout[n-5]["weight"])
     elif day == 4:
-        if len(db.execute("SELECT weight FROM workouts WHERE day = ?", day)) > 0:
-            # Get current date
-            date = datetime.today().strftime("%Y-%m-%d")
-            n = 3
+        # Number of exercises
+        n = 3
 
-            # Load weights
-            workout = db.execute("SELECT weight FROM workouts WHERE day = ? ORDER BY id DESC LIMIT ?", day, n)
+        feedback1 = feedback[0]
+        feedback2 = feedback[1]
 
-            # Get feedback from last week
-            feedback = db.execute("SELECT feedback FROM workouts WHERE day = ? AND NOT date = ? ORDER BY id DESC LIMIT 1", day, date)[0]["feedback"]
-            feedback1 = feedback[0]
-            feedback2 = feedback[1]
-
-            # Display "workout" page
-            return render_template("workout4.html", feedback1=feedback1, feedback2=feedback2, weight1=workout[n-1]["weight"], weight2=workout[n-2]["weight"], weight3=workout[n-3]["weight"])
-        # Display empty "workout" page
-        else:
-            return render_template("workout4.html")
+        # Display "workout" page
+        return render_template("workout4.html", feedback1=feedback1, feedback2=feedback2, weight1=workout[n-1]["weight"], weight2=workout[n-2]["weight"], weight3=workout[n-3]["weight"])
     elif day == 5:
-        if len(db.execute("SELECT weight FROM workouts WHERE day = ?", day)) > 0:
-            # Get current date
-            date = datetime.today().strftime("%Y-%m-%d")
-            n = 6
+        # Number of exercises
+        n = 6
 
-            # Load weights
-            workout = db.execute("SELECT weight FROM workouts WHERE day = ? ORDER BY id DESC LIMIT ?", day, n)
-
-            # Get feedback from last week
-            feedback = db.execute("SELECT feedback FROM workouts WHERE day = ? AND NOT date = ? ORDER BY id DESC LIMIT 1", day, date)[0]["feedback"]
-
-            # Display "workout" page
-            return render_template("workout5.html", feedback=feedback, weight1=workout[n-1]["weight"], weight2=workout[n-2]["weight"], weight3=workout[n-3]["weight"], weight4=workout[n-4]["weight"], weight5=workout[n-5]["weight"], weight6=workout[n-6]["weight"])
-        # Display empty "workout" page
-        else:
-            return render_template("workout5.html")
+        # Display "workout" page
+        return render_template("workout5.html", feedback=feedback, weight1=workout[n-1]["weight"], weight2=workout[n-2]["weight"], weight3=workout[n-3]["weight"], weight4=workout[n-4]["weight"], weight5=workout[n-5]["weight"], weight6=workout[n-6]["weight"])
     # Return "noworkout" page
     else:
         return render_template("noworkout.html")
+
+if __name__ == '__main__':
+ app.debug = True
+ port = int(os.environ.get('PORT', 5000))
+ app.run(host='0.0.0.0', port=port)

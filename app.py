@@ -22,21 +22,21 @@ app.config["TEMPLATES_AUTO_RELOAD"] = True
 
 
 # Configure CS50 Library to use SQLite database
-url = "postgres://exercises_7g9i_user:AkBujg6hJTVUnxPHU9QdoNld6c8YiOPB@dpg-ck0o9mu3ktkc738padr0-a.frankfurt-postgres.render.com/exercises_7g9i"
 
-uri = os.getenv("DATABASE_URL")
+uri = "postgres://exercises_7g9i_user:AkBujg6hJTVUnxPHU9QdoNld6c8YiOPB@dpg-ck0o9mu3ktkc738padr0-a.frankfurt-postgres.render.com/exercises_7g9i"
 #uri = os.getenv(url)
 if uri.startswith("postgres://"):
     uri = uri.replace("postgres://", "postgresql://")
 
 db = SQL(uri)
 
+
 '''
 conn = psycopg2.connect(
         host="dpg-ck0o9mu3ktkc738padr0-a",
         database="exercises_7g9i",
-        user=os.environ['exercises_7g9i_user'],
-        password=os.environ['AkBujg6hJTVUnxPHU9QdoNld6c8YiOPB'])
+        user='exercises_7g9i_user',
+        password='AkBujg6hJTVUnxPHU9QdoNld6c8YiOPB')
 
 # Open a cursor to perform database operations
 db = conn.cursor()
@@ -177,7 +177,10 @@ def workout1():
         workout = db.execute("SELECT weight FROM workouts WHERE day = ? ORDER BY id DESC LIMIT ?", day, n)
 
         # Get feedback from last week
-        feedback = db.execute("SELECT feedback FROM workouts WHERE day = ? AND NOT date = ? ORDER BY id DESC LIMIT 1", day, date)[0]["feedback"]
+        try:
+            feedback = db.execute("SELECT feedback FROM workouts WHERE day = ? ORDER BY id DESC LIMIT ?", day, n+1)[n]["feedback"]
+        except:
+            feedback = "  "
 
         # Display "workout" page
         return render_template("workout1.html", feedback=feedback, weight1=workout[n-1]["weight"], weight2=workout[n-2]["weight"], weight3=workout[n-3]["weight"], weight4=workout[n-4]["weight"], weight5=workout[n-5]["weight"])
@@ -192,6 +195,7 @@ def workout1():
 def workout2():
     # Get current date and day of the week
     date = datetime.today().strftime("%Y-%m-%d")
+    date = '2023-09-09'
     day = 1
     if request.method == "POST":
         # Get form data
@@ -215,7 +219,10 @@ def workout2():
         workout = db.execute("SELECT weight FROM workouts WHERE day = ? ORDER BY id DESC LIMIT ?", day, n)
 
         # Get feedback from last week
-        feedback = db.execute("SELECT feedback FROM workouts WHERE day = ? AND NOT date = ? ORDER BY id DESC LIMIT 1", day, date)[0]["feedback"]
+        try:
+            feedback = db.execute("SELECT feedback FROM workouts WHERE day = ? ORDER BY id DESC LIMIT ?", day, n+1)[n]["feedback"]
+        except:
+            feedback = "  "
 
         # Display "workout" page
         return render_template("workout2.html", feedback=feedback, weight1=workout[n-1]["weight"], weight2=workout[n-2]["weight"], weight3=workout[n-3]["weight"], weight4=workout[n-4]["weight"], weight5=workout[n-5]["weight"])
@@ -254,7 +261,10 @@ def workout3():
         workout = db.execute("SELECT weight FROM workouts WHERE day = ? ORDER BY id DESC LIMIT ?", day, n)
 
         # Get feedback from last week
-        feedback = db.execute("SELECT feedback FROM workouts WHERE day = ? AND NOT date = ? ORDER BY id DESC LIMIT 1", day, date)[0]["feedback"]
+        try:
+            feedback = db.execute("SELECT feedback FROM workouts WHERE day = ? ORDER BY id DESC LIMIT ?", day, n+1)[n]["feedback"]
+        except:
+            feedback = "  "
 
         # Display "workout" page
         return render_template("workout3.html", feedback=feedback, weight1=workout[n-1]["weight"], weight2=workout[n-2]["weight"], weight3=workout[n-3]["weight"], weight4=workout[n-4]["weight"], weight5=workout[n-5]["weight"])
@@ -294,7 +304,10 @@ def workout4():
         workout = db.execute("SELECT weight FROM workouts WHERE day = ? ORDER BY id DESC LIMIT ?", day, n)
 
         # Get feedback from last week
-        feedback = db.execute("SELECT feedback FROM workouts WHERE day = ? AND NOT date = ? ORDER BY id DESC LIMIT 1", day, date)[0]["feedback"]
+        try:
+            feedback = db.execute("SELECT feedback FROM workouts WHERE day = ? ORDER BY id DESC LIMIT ?", day, n+1)[n]["feedback"]
+        except:
+            feedback = "  "
         feedback1 = feedback[0]
         feedback2 = feedback[1]
 
@@ -335,7 +348,10 @@ def workout5():
         workout = db.execute("SELECT weight FROM workouts WHERE day = ? ORDER BY id DESC LIMIT ?", day, n)
 
         # Get feedback from last week
-        feedback = db.execute("SELECT feedback FROM workouts WHERE day = ? AND NOT date = ? ORDER BY id DESC LIMIT 1", day, date)[0]["feedback"]
+        try:
+            feedback = db.execute("SELECT feedback FROM workouts WHERE day = ? ORDER BY id DESC LIMIT ?", day, n+1)[n]["feedback"]
+        except:
+            feedback = "  "
 
         # Display "workout" page
         return render_template("workout5.html", feedback=feedback, weight1=workout[n-1]["weight"], weight2=workout[n-2]["weight"], weight3=workout[n-3]["weight"], weight4=workout[n-4]["weight"], weight5=workout[n-5]["weight"], weight6=workout[n-6]["weight"])
@@ -347,22 +363,13 @@ def workout5():
 # Load main page
 @app.route("/")
 def workout():
+    # Initiate SQL tables if they don't yet exist
+    db.execute("CREATE TABLE IF NOT EXISTS workouts(id SERIAL PRIMARY KEY NOT NULL,exercise TEXT NOT NULL,weight NUMERIC NOT NULL,feedback TEXT NOT NULL,day NUMERIC NOT NULL,date TEXT NOT NULL)")
+    db.execute("CREATE TABLE IF NOT EXISTS bodyweight(id SERIAL PRIMARY KEY NOT NULL,weight NUMERIC NOT NULL,date TEXT NOT NULL)")
+    db.execute("CREATE TABLE IF NOT EXISTS graph(id SERIAL PRIMARY KEY NOT NULL,exercise TEXT NOT NULL)")
+
     # Show today's workout based on the current day of the week
     day = datetime.today().weekday()
-
-
-    db.execute("CREATE TABLE IF NOT EXISTS workouts(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,exercise TEXT NOT NULL,weight NUMERIC NOT NULL,feedback TEXT NOT NULL,day NUMERIC NOT NULL,date TEXT NOT NULL)")
-    db.execute("CREATE TABLE IF NOT EXISTS bodyweight(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,weight NUMERIC NOT NULL,date TEXT NOT NULL)")
-    db.execute("CREATE TABLE IF NOT EXISTS graph(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,exercise TEXT NOT NULL)")
-
-    # Get current date
-    date = datetime.today().strftime("%Y-%m-%d")
-
-    # Get feedback from last week
-    try:
-        feedback = db.execute("SELECT feedback FROM workouts WHERE day = ? AND NOT date = ? ORDER BY id DESC LIMIT 1", day, date)[0]["feedback"]
-    except:
-        feedback = "  "
 
     # Load weights
     n = [5, 5, 5, 0, 3, 6, 0][day]
@@ -372,7 +379,11 @@ def workout():
             for i in range(n):
                 workout.append({"weight": 0})
 
-    print(workout)
+    # Get feedback from last week
+    try:
+        feedback = db.execute("SELECT feedback FROM workouts WHERE day = ? ORDER BY id DESC LIMIT ?", day, n+1)[n]["feedback"]
+    except:
+        feedback = "  "
 
     if day == 0:
         # Number of exercises

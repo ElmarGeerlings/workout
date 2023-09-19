@@ -20,7 +20,7 @@ Session(app)
 # Ensure templates are auto-reloaded
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 
-'''
+
 # Configure CS50 Library to use SQLite database
 url = "postgres://exercises_7g9i_user:AkBujg6hJTVUnxPHU9QdoNld6c8YiOPB@dpg-ck0o9mu3ktkc738padr0-a.frankfurt-postgres.render.com/exercises_7g9i"
 
@@ -30,8 +30,8 @@ if uri.startswith("postgres://"):
     uri = uri.replace("postgres://", "postgresql://")
 
 db = SQL(uri)
-'''
 
+'''
 conn = psycopg2.connect(
         host="dpg-ck0o9mu3ktkc738padr0-a",
         database="exercises_7g9i",
@@ -40,7 +40,7 @@ conn = psycopg2.connect(
 
 # Open a cursor to perform database operations
 db = conn.cursor()
-
+'''
 
 '''
 SQL tables:

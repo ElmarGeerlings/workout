@@ -351,9 +351,9 @@ def workout():
     day = datetime.today().weekday()
 
 
-    db.execute("CREATE TABLE workouts(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,exercise TEXT NOT NULL,weight NUMERIC NOT NULL,feedback TEXT NOT NULL,day NUMERIC NOT NULL,date TEXT NOT NULL)")
-    db.execute("CREATE TABLE bodyweight(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,weight NUMERIC NOT NULL,date TEXT NOT NULL)")
-    db.execute("CREATE TABLE graph(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,exercise TEXT NOT NULL)")
+    db.execute("CREATE TABLE IF NOT EXISTS workouts(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,exercise TEXT NOT NULL,weight NUMERIC NOT NULL,feedback TEXT NOT NULL,day NUMERIC NOT NULL,date TEXT NOT NULL)")
+    db.execute("CREATE TABLE IF NOT EXISTS bodyweight(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,weight NUMERIC NOT NULL,date TEXT NOT NULL)")
+    db.execute("CREATE TABLE IF NOT EXISTS graph(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,exercise TEXT NOT NULL)")
 
     # Get current date
     date = datetime.today().strftime("%Y-%m-%d")

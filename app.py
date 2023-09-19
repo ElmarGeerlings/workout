@@ -350,12 +350,10 @@ def workout():
     # Show today's workout based on the current day of the week
     day = datetime.today().weekday()
 
-    try:
-        db.execute("SELECT * FROM workouts")
-    except:
-        db.execute("CREATE TABLE workouts(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,exercise TEXT NOT NULL,weight NUMERIC NOT NULL,feedback TEXT NOT NULL,day NUMERIC NOT NULL,date TEXT NOT NULL)")
-        db.execute("CREATE TABLE bodyweight(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,weight NUMERIC NOT NULL,date TEXT NOT NULL)")
-        db.execute("CREATE TABLE graph(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,exercise TEXT NOT NULL)")
+
+    db.execute("CREATE TABLE workouts(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,exercise TEXT NOT NULL,weight NUMERIC NOT NULL,feedback TEXT NOT NULL,day NUMERIC NOT NULL,date TEXT NOT NULL)")
+    db.execute("CREATE TABLE bodyweight(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,weight NUMERIC NOT NULL,date TEXT NOT NULL)")
+    db.execute("CREATE TABLE graph(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,exercise TEXT NOT NULL)")
 
     # Get current date
     date = datetime.today().strftime("%Y-%m-%d")

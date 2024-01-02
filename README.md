@@ -1,5 +1,4 @@
 # Elmar workout by Elmar Geerlings
-# CS50 Final Project 2022
 
 #### Video Demo:  https://youtu.be/GVOlQa4heuQ
 #### Website Link: https://elmarworkout.herokuapp.com/

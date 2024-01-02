@@ -23,7 +23,7 @@ app.config["TEMPLATES_AUTO_RELOAD"] = True
 
 # Configure CS50 Library to use SQLite database
 
-uri = "postgres://exercises_7g9i_user:AkBujg6hJTVUnxPHU9QdoNld6c8YiOPB@dpg-ck0o9mu3ktkc738padr0-a.frankfurt-postgres.render.com/exercises_7g9i"
+uri = "postgres://workouts_8sdm_user:wLJUvQkB6RtzzNpKHjeEChoUqxF5SYRu@dpg-cm9te0ed3nmc73b8j8u0-a.frankfurt-postgres.render.com/workouts_8sdm"
 #uri = os.getenv(url)
 if uri.startswith("postgres://"):
     uri = uri.replace("postgres://", "postgresql://")

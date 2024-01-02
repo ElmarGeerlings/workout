@@ -10,7 +10,7 @@ Includes pages with workouts, goals, progress, lifting cues/tips
 The app is deployed on heroku, using the CS50 tutorial: https://cs50.readthedocs.io/heroku/
 
 
-## Long description (of every page):
+# Long description (of every page):
 The webapp is written in the python file "app.py" and uses flask.
 It uses a SQL database named "workouts.db" to log weights for exercises and bodyweight.
 The exercise table includes ID, exercise, weight, feedback, day(of the week) and date.

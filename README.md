@@ -1,12 +1,11 @@
 # Elmar workout by Elmar Geerlings
 
 #### Video Demo:  https://youtu.be/GVOlQa4heuQ
-#### Website Link: https://elmarworkout.herokuapp.com/
+#### Website Link: https://elmar-workout.onrender.com
 
 
 A webapp to log my workouts.
 Includes pages with workouts, goals, progress, lifting cues/tips
-The app is deployed on heroku, using the CS50 tutorial: https://cs50.readthedocs.io/heroku/
 
 
 ## Description:

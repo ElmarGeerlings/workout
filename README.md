@@ -1,7 +1,7 @@
 # Elmar workout by Elmar Geerlings
 
 #### Video Demo:  https://youtu.be/GVOlQa4heuQ
-#### Website Link: https://elmar-workout.onrender.com
+#### Website Link: https://elmar-workout.onrender.com (takes a while to load)
 
 
 A webapp to log my workouts.
